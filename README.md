@@ -1,8 +1,5 @@
-# vue-2-boilerplate
-> A boilerplate for building medium to large Vue 2 single page applications
-
-This boilerplate is based on the Vue webpack template.
-Common topics are discussed in the VueJS [docs](http://vuejs-templates.github.io/webpack). Make sure to read it!
+# UDS web
+> a web based, standalone client for unlimited drive storage by encoding files in base64
 
 ## Usage
 To get up and running run:
