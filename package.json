@@ -1,0 +1,83 @@
+{
+  "name": "uds-web",
+  "version": "0.0.0",
+  "description": "A boilerplate for medium to large Vue 2 single page applications",
+  "author": "Stewart McGown <stewart@twistedcore.co.uk>",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test": "vue-cli-service test",
+    "e2e": "vue-cli-service e2e",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "font-awesome": "^4.7.0",
+    "register-service-worker": "^1.0.0",
+    "vue": "^2.5.13",
+    "vue-gapi": "0.0.10",
+    "vue-google-oauth2": "^1.3.5",
+    "vue-i18n": "^8.0.0",
+    "vue-router": "^3.0.1",
+    "vuetify": "^1.5.5",
+    "vuex": "^3.0.1",
+    "vuex-router-sync": "^5.0.0"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.0",
+    "@vue/cli-plugin-e2e-nightwatch": "^3.0.0",
+    "@vue/cli-plugin-eslint": "^3.0.0",
+    "@vue/cli-plugin-pwa": "^3.0.0",
+    "@vue/cli-plugin-unit-mocha": "^3.0.0",
+    "@vue/cli-service": "^3.0.0",
+    "@vue/eslint-config-airbnb": "^3.0.0",
+    "@vue/test-utils": "^1.0.0-beta.12",
+    "chai": "^4.1.2",
+    "lint-staged": "^7.0.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
+    "vue-cli-plugin-vuetify": "^0.5.0",
+    "vue-template-compiler": "^2.5.13",
+    "vuetify-loader": "^1.0.5"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "bugs": {
+    "url": "https://github.com/stewartmcgown/uds-web/issues"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "homepage": "https://github.com/stewartmcgown/uds-web#readme",
+  "keywords": [
+    "Vue",
+    "Next",
+    "Boilerplate",
+    "Webpack",
+    "Lint",
+    "Medium",
+    "Large",
+    "SPA",
+    "Single",
+    "Page",
+    "Application"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "*.js": [
+      "vue-cli-service lint",
+      "git add"
+    ],
+    "*.vue": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stewartmcgown/uds-web.git"
+  }
+}
