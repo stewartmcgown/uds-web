@@ -39,18 +39,15 @@ export const login = ({ commit }) => {
     //on success
     //return this.$http.post('http://your-backend-server.com/auth/google', { code: authCode, redirect_uri: 'postmessage' })
     commit(types.LOGIN, { success: true });
-    return gapi.client.drive.files.list()  
-  })
-  .then(response => {
-    console.log(response)
+      Vue.router.push({
+      name: 'home.index',
+    });
   })
   .catch(error => {
     commit(types.LOGIN, { success: false });
   })
 
-  Vue.router.push({
-    name: 'home.index',
-  });
+  
 };
 
 export const logout = ({ commit }) => {

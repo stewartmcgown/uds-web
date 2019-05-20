@@ -27,10 +27,13 @@ export default {
     //
   },
 
-  [LOGIN](state, token) {
-    state.authenticated = true;
-    //localStorage.setItem('id_token', token);
-    Vue.$http.defaults.headers.common.Authorization = `Bearer ${token}`;
+  [LOGIN](state, {
+    success,
+    token
+  }) {
+    state.authenticated = success;
+    localStorage.setItem('id_token', token);
+
   },
 
   [LOGOUT](state) {

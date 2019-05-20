@@ -1,4 +1,6 @@
-<template></template>
+<template>
+  <file-browser />
+</template>
 
 <script>
 /* ============
@@ -9,6 +11,7 @@
  */
 
 import VLayout from "@/layouts/Default.vue";
+import FileBrowser from "@/components/FileBrowser.vue"
 
 export default {
   /**
@@ -20,7 +23,8 @@ export default {
    * The components that the page can use.
    */
   components: {
-    VLayout
+    VLayout,
+    FileBrowser
   }
 };
 </script>
