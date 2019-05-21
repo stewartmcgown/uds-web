@@ -1,6 +1,9 @@
 <template>
   <v-layout>
-    <v-flex xs12 sm8 offset-sm2>
+    <v-flex
+      xs12
+      sm8
+      offset-sm2>
       <v-card>
         <v-card-title primary-title>
           <div>
@@ -8,8 +11,6 @@
             <div>{{ card_text }}</div>
           </div>
         </v-card-title>
-        <v-card-text>
-        </v-card-text>
         <v-card-actions>
           <v-btn @click="login">
             <v-icon>person</v-icon>Sign in with Google
@@ -34,7 +35,7 @@ export default {
   /**
    * The name of the page.
    */
-  name: "LoginIndex",
+  name: 'LoginIndex',
 
   /**
    * The components the page can use.
@@ -53,7 +54,8 @@ export default {
       user: {
         email: null,
         password: null
-      }
+      },
+      card_text: 'UDS needs access to your entire Drive.'
     };
   },
 
@@ -67,7 +69,7 @@ export default {
      * @param {Object} user The user to be logged in.
      */
     login() {
-      this.$store.dispatch("auth/login");
+      this.$store.dispatch('auth/login');
     }
   }
 };
