@@ -33,7 +33,6 @@ export default {
   }) {
     state.authenticated = success;
     localStorage.setItem('id_token', token);
-
   },
 
   [LOGOUT](state) {

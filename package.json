@@ -7,8 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test",
-    "e2e": "vue-cli-service e2e",
-    "lint": "vue-cli-service lint"
+    "e2e": "vue-cli-service e2e"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -26,14 +25,11 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.7.0",
     "@vue/cli-plugin-e2e-nightwatch": "^3.7.0",
-    "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/cli-plugin-pwa": "^3.7.0",
     "@vue/cli-plugin-unit-mocha": "^3.7.0",
     "@vue/cli-service": "^3.7.0",
-    "@vue/eslint-config-airbnb": "^4.0.0",
     "@vue/test-utils": "^1.0.0-beta.12",
     "chai": "^4.2.0",
-    "lint-staged": "^8.1.7",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue-cli-plugin-vuetify": "^0.5.0",
@@ -48,34 +44,11 @@
   "bugs": {
     "url": "https://github.com/stewartmcgown/uds-web/issues"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
   "homepage": "https://github.com/stewartmcgown/uds-web#readme",
   "keywords": [
-    "Vue",
-    "Next",
-    "Boilerplate",
-    "Webpack",
-    "Lint",
-    "Medium",
-    "Large",
-    "SPA",
-    "Single",
-    "Page",
-    "Application"
+    "Unlimited"
   ],
   "license": "MIT",
-  "lint-staged": {
-    "*.js": [
-      "vue-cli-service lint",
-      "git add"
-    ],
-    "*.vue": [
-      "vue-cli-service lint",
-      "git add"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stewartmcgown/uds-web.git"

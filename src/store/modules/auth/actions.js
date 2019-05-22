@@ -35,19 +35,17 @@ export const register = ({ commit }) => {
 
 export const login = ({ commit }) => {
   new Vue().$getGapiClient()
-  .then(gapi => {
-    //on success
-    //return this.$http.post('http://your-backend-server.com/auth/google', { code: authCode, redirect_uri: 'postmessage' })
-    commit(types.LOGIN, { success: true });
+    .then((gapi) => {
+    // on success
+    // return this.$http.post('http://your-backend-server.com/auth/google', { code: authCode, redirect_uri: 'postmessage' })
+      commit(types.LOGIN, { success: true });
       Vue.router.push({
-      name: 'home.index',
-    });
-  })
-  .catch(error => {
-    commit(types.LOGIN, { success: false });
-  })
-
-  
+        name: 'home.index',
+      });
+    })
+    .catch((error) => {
+      commit(types.LOGIN, { success: false });
+    })
 };
 
 export const logout = ({ commit }) => {
