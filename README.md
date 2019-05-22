@@ -1,6 +1,10 @@
 # UDS web
 > a web based, standalone client for unlimited drive storage by encoding files in base64
 
+## Logic
+- Cross compatible with any other UDS client
+- Encodes files into base64 that is then inserted into Google Docs
+
 ## Usage
 To get up and running run:
 ``` bash
@@ -17,17 +21,7 @@ But yeah, this will basically do the same as `npm install`.
 If even this is too much of a deal, try creating an alias and bind `npm install && npm run serve` to `npmis`.
 
 ## Configuration ##
-> Wait a minute, you just said that I only need to run npm install?
-> What's this? I need to do more?
-
-Yeah, to get up and running real quick, `npm install` is enough.
-But if you want to, let's say, connect to an external API, there's a little bit more involved.
-You need to configure your application a bit more, explained below:
-
-### Environment variables ###
-In the root of the boilerplate is a predefined environment file.
-Copy the file and name it `.env` or a configuration specific file like `.env.dev`.
-For more information, visit the [docs](https://github.com/vuejs/vue-cli/blob/dev/docs/env.md).
+You will have to specify your own API key and Client ID in order to use UDS.
 
 ## What's included ##
 - `npm run serve`: first-in-class development experience.

@@ -6,5 +6,13 @@
  */
 
 export default {
-  files: []
+  files: [],
+  progress: {
+    visible: false,
+    text: '',
+    timeout: 60000
+  },
+  uploads: {},
+  downloads: {},
+  connections: 0
 };

@@ -1,10 +1,11 @@
 <template>
   <div class="filebrowser">
-    <file-toolbar/>
+    <file-toolbar @delete="_delete"/>
     <v-data-table
       v-model="selected"
       :headers="headers"
       :items="files"
+      :rows-per-page-items="rows_per_page_items"
       :pagination.sync="pagination"
       select-all
       item-key="id"
@@ -19,7 +20,7 @@
               primary
               hide-details
               @click.stop="toggleAll"
-            ></v-checkbox>
+            />
           </th>
           <th
             v-for="header in props.headers"
@@ -39,11 +40,14 @@
           @dblclick="download(props.item.id)"
         >
           <td>
-            <v-checkbox :input-value="props.selected" primary hide-details></v-checkbox>
+            <v-checkbox
+              :input-value="props.selected"
+              primary
+              hide-details/>
           </td>
           <td>{{ props.item.name }}</td>
           <td class="text-xs-right">{{ props.item.properties.size }}</td>
-          <td class="text-xs-right">{{ props.item.mimeType }}</td>
+          <td class="text-xs-right">{{ props.item.properties.mimeType }}</td>
         </tr>
       </template>
     </v-data-table>
@@ -51,31 +55,32 @@
 </template>
 
 <script>
-import FileToolbar from "@/components/FileToolbar.vue";
+import FileToolbar from '@/components/FileToolbar.vue';
 
 export default {
-  name: "FileBrowser",
+  name: 'FileBrowser',
   components: {
     FileToolbar
   },
   data: () => ({
     pagination: {
-      sortBy: "name"
+      sortBy: 'name'
     },
     selected: [],
+    rows_per_page_items: [15, 30, 45, { text: '$vuetify.dataIterator.rowsPerPageAll', value: -1 }],
     headers: [
       {
-        text: "Name",
-        align: "left",
-        value: "name"
+        text: 'Name',
+        align: 'left',
+        value: 'name'
       },
       {
-        text: "Size",
-        value: "size"
+        text: 'Size',
+        value: 'size'
       },
       {
-        text: "MimeType",
-        value: "mimeType"
+        text: 'MimeType',
+        value: 'mimeType'
       }
     ]
   }),
@@ -85,7 +90,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch("files/list", { q: "" });
+    this.$store.dispatch('files/list', { q: '' });
   },
   methods: {
     toggleAll() {
@@ -101,7 +106,10 @@ export default {
       }
     },
     download(id) {
-      this.$store.dispatch("files/download", { id });
+      this.$store.dispatch('files/download', { id });
+    },
+    _delete() {
+      this.$store.dispatch('files/deleteBatch', { ids: this.selected.map(s => s.id) })
     }
   }
 };

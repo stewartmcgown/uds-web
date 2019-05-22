@@ -11,13 +11,12 @@ import api from '@/api/'
 import Vue from 'vue';
 import * as types from './mutation-types';
 
-
 export const list = ({
   commit
 }, {
   q
 }) => {
-  let query = "properties has {key='uds' and value='true'} and trashed=false"
+  let query = "properties has {key='uds' and value='true'} and trashed=false" // and properties has {key='finished' and value='true'}
   if (!!q && q instanceof String) query += `and ${q}`
 
   new Vue().$getGapiClient()
@@ -27,7 +26,6 @@ export const list = ({
       fields: 'nextPageToken, files(id, name, properties, mimeType)'
     }))
     .then((response) => {
-      console.log(response.result.files)
       commit(types.FILES, response.result.files)
     })
     .catch((error) => {
@@ -35,12 +33,30 @@ export const list = ({
     })
 };
 
+export const deleteBatch = ({
+  commit
+}, {
+  ids
+}) => {
+  api.deleteBatch(ids)
+}
+
 export const download = ({
   commit
 }, {
   id
 }) => {
   api.download(id)
+}
+
+export const downloadBatch = ({
+  commit
+}, {
+  ids
+}) => {
+  for (const id of ids) {
+    api.download(id)
+  }
 }
 
 export const upload = ({
@@ -51,8 +67,47 @@ export const upload = ({
   api.upload(filereader)
 }
 
+export const uploadProgress = ({
+  commit
+}, {
+  id,
+  name,
+  uploaded,
+  total,
+  finished
+}) => {
+  commit(types.UPLOAD_PROGRESS, { id, name, uploaded, total, finished })
+}
+
+export const downloadProgress = ({
+  commit
+}, {
+  id,
+  name,
+  downloaded,
+  total,
+  finished = false
+}) => {
+  commit(types.DOWNLOAD_PROGRESS, { id, name, downloaded, total, finished })
+}
+
+export const incrementConnections = ({
+  commit
+}) => commit(types.CONNECTIONS, 1)
+
+export const decrementConnections = ({
+  commit
+}) => commit(types.CONNECTIONS, -1)
+
+
 export default {
   list,
+  deleteBatch,
   download,
-  upload
+  downloadBatch,
+  upload,
+  uploadProgress,
+  downloadProgress,
+  incrementConnections,
+  decrementConnections
 };

@@ -1,21 +1,29 @@
 <template>
   <div class="file-toolbar">
     <v-btn @click="upload">
-      <v-icon>cloud_upload</v-icon>File
+      <v-icon>cloud_upload</v-icon>&nbsp;File
+    </v-btn>
+    <v-btn @click="download">
+      <v-icon>cloud_download</v-icon>&nbsp;Download
+    </v-btn>
+    <v-btn @click="$emit('delete')">
+      <v-icon>delete</v-icon>&nbsp;Delete
     </v-btn>
   </div>
 </template>
 
 <script>
 export default {
-  name: "FileToolbar",
+  name: 'FileToolbar',
   methods: {
     upload() {
-      const f = document.createElement("input");
-      f.type = "file";
+      const f = document.createElement('input');
+      f.type = 'file';
       f.click();
-      f.onchange = () =>
-        this.$store.dispatch("files/upload", { filereader: f });
+      f.onchange = () => this.$store.dispatch('files/upload', { filereader: f });
+    },
+    download() {
+      this.$store.dispatch('files/downloadBatch', { ids: this.$store.state.files.selected.map(s => s.id) })
     }
   }
 };

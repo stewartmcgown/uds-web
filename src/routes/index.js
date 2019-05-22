@@ -20,6 +20,19 @@ export default [
     },
   },
 
+  {
+    path: '/transfers',
+    name: 'transfers.index',
+    component: () => import('@/views/Transfers/Index.vue'),
+
+    // If the user needs to be authenticated to view this page
+    meta: {
+      auth: true,
+      title: 'Transfers',
+
+    },
+  },
+
   // Account
   {
     path: '/account',
