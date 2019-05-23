@@ -44,24 +44,31 @@ export default new Vuex.Store({
       text: null,
       timeout: 6000,
       multiline: false,
-    }
+    },
+    notificationQueue: []
   },
 
   actions: {
-    notification({ commit }, payload) {
+    notification({
+      commit
+    }, payload) {
+      //commit('pushNotificaton', payload)
       commit('showNotification', payload)
     }
   },
 
   mutations: {
+    pushNoficiation(state, notif) {
+      state.notificationQueue.push(notif)
+    },
     showNotification(state, payload) {
       state.notification.text = payload.text
       state.notification.multiline = (payload.text.length > 50) ? true : false
-      
+
       if (payload.multiline) {
         state.notification.multiline = payload.multiline
       }
-      
+
       if (payload.timeout) {
         state.notification.timeout = payload.timeout
       }

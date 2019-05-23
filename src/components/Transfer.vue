@@ -1,6 +1,9 @@
 <template>
-  <div :class="className">
-    <v-progress-circular :value="progress"/> {{ snackbar_text }}
+  <div :class="className" v-if="finished !== true">
+    <v-progress-linear :value="progress" :indeterminate="indeterminate === true"/>
+
+    <span>{{name}}</span>
+    : {{ message }}
   </div>
 </template>
 
@@ -10,21 +13,24 @@ export default {
     id: String,
     name: String,
     type: String,
-    uploaded: Number,
-    total: Number,
-    snackbar_text: String
+    parts_completed: Number,
+    parts_total: Number,
+    message: String,
+    indeterminate: Boolean,
+    finished: Boolean
   },
   computed: {
     progress() {
-      return ((this.uploaded || this.downloaded) / this.total) * 100
+      return (this.parts_completed / this.parts_total) * 100;
     },
     className() {
-      return `transfer ${this.type}`
+      return `transfer ${this.type}`;
     }
   }
-}
+};
 </script>
 
-<style>
-
+<style scoped>
+.transfer {
+}
 </style>

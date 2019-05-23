@@ -20,11 +20,18 @@ export const deleteBatch = async (ids) => {
     }))
   }
 
-    store.dispatch("notification", {
-        text: `Deleting ${ids.length} files...`
-    })
+  store.dispatch("notification", {
+    text: `Deleting ${ids.length} files...`
+  })
 
-  return batch.then(r => store.dispatch('files/list', { q: '' }))
+  return batch.then(r => {
+    store.dispatch("notification", {
+      text: `Deleted ${ids.length} files!`
+    })
+    store.dispatch('files/list', {
+      q: ''
+    })
+  })
 }
 
 export default {

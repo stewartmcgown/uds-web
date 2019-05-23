@@ -8,15 +8,10 @@
         </v-toolbar-title>
       </router-link>
       <v-spacer/>
-      <v-btn
-        flat
-        to="/transfers">
+      <v-btn flat to="/transfers">
         <span class="mr-2">Transfers</span>
       </v-btn>
-      <v-btn
-        flat
-        href="https://github.com/stewartmcgown/uds-web"
-        target="_blank">
+      <v-btn flat href="https://github.com/stewartmcgown/uds-web" target="_blank">
         <span class="mr-2">Latest Release</span>
       </v-btn>
     </v-toolbar>
@@ -25,17 +20,15 @@
       <router-view/>
     </v-content>
 
-    <progress-snackbar />
-    <notification />
+    <notification/>
   </v-app>
 </template>
 
 <script>
-import progressSnackbar from '@/components/ProgressSnackbar'
-import notification from '@/components/Notification'
+import notification from "@/components/Notification";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     notification
   },

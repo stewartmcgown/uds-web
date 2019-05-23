@@ -7,13 +7,27 @@ import {
 } from './utils'
 
 import store from '../store'
+import uuid from 'uuid'
 
 /**
+ * Handles the upload of a single file. This is a self contained
+ * function that may have to be changed in order to support resumable
+ * transfers.
  *
  * @param {HTMLFileInput} file
  */
-export const upload = async (file) => {
-  file = file.files[0]
+export const upload = async (fileInput) => {
+  // Unique transfer ID
+  const transferId = uuid.v4()
+
+  const file = fileInput.files[0]
+
+  store.dispatch("notification", {
+    text: `Uploading ${file.name}...`,
+    button: 'viewTransfers'
+  })
+
+
   const fileSize = file.size;
   const chunkSize = 750 * 1024; // bytes
   const parts = Math.ceil(fileSize / chunkSize)
@@ -21,6 +35,12 @@ export const upload = async (file) => {
   let offset = 0;
   const chunkReaderBlock = null;
   let parent = 'root'
+
+  const fireUploadProgressEvent = (args = {}) => store.dispatch('files/progress', {
+    type: 'upload',
+    transferId,
+    ...args
+  })
 
   const readEventHandler = (evt) => {
     if (evt.target.error == null) {
@@ -32,7 +52,14 @@ export const upload = async (file) => {
       return;
     }
     if (offset >= fileSize) {
-      store.dispatch('files/uploadProgress', { id: parent, name: file.name, uploaded: Math.ceil(offset / chunkSize), total: parts, finished: true })
+      /*store.dispatch('files/uploadProgress', {
+        id: parent,
+        name: file.name,
+        uploaded: Math.ceil(offset / chunkSize),
+        total: parts,
+        finished: true,
+        transferId
+      })*/
       return;
     }
     // of to the next chunk
@@ -48,33 +75,34 @@ export const upload = async (file) => {
   }
 
   const uploadChunk = async (chunk, part) => {
-    while (uploads > 5) {
-      await sleep(500)
-    }
-
-    uploads++
-
     uploadFile({
-      name: `${file.name}.${part}`,
-      parent,
-      properties: {
-        part
-      },
-      body: {
-        body: chunk,
-        mimeType: 'text/plain'
-      }
-    })
+        name: `${file.name}.${part}`,
+        parent,
+        properties: {
+          part
+        },
+        body: {
+          body: chunk,
+          mimeType: 'text/plain'
+        }
+      })
       .then((r) => {
-        uploads--
-        store.dispatch('files/uploadProgress', { id: parent, name: file.name, uploaded: part, total: parts })
+        fireUploadProgressEvent()
       })
-      .catch((e) => {
-        uploads--
-        return uploadChunk(chunk, part)
-      })
+      .catch((e) => uploadChunk(chunk, part))
   }
 
+  /**
+   * files/progress tells Vuex a new transfer has begun
+   */
+  fireUploadProgressEvent({
+    name: file.name,
+    parts_total: parts
+  })
+
+  /**
+   * The properties to attach to the drive folder
+   */
   const properties = {
     uds: true,
     size: byteFormat(fileSize),
@@ -85,11 +113,18 @@ export const upload = async (file) => {
     finished: false
   }
 
-    store.dispatch('files/uploadProgress', {id: parent, name: file.name})
-
-  createFolder({ name: file.name, parent: '12V_eXUKlDZhZ1BVRWWPerwBzTDl5fmTX', properties }).then((response) => {
+  createFolder({
+    name: file.name,
+    parent: '12V_eXUKlDZhZ1BVRWWPerwBzTDl5fmTX',
+    properties
+  }).then((response) => {
     console.log(response)
     parent = response.result.id
+
+    fireUploadProgressEvent({
+      id: parent,
+      dontIncrement: true
+    })
 
     readChunk(offset, chunkSize, file)
   })

@@ -9,9 +9,27 @@ import {
 import Base64 from './base64'
 
 import store from '../store'
-
+import uuid from 'uuid'
 
 export const download = async (id) => {
+  store.dispatch("notification", {
+    text: `Starting download...`,
+    button: 'viewTransfers'
+  })
+
+  const transferId = uuid.v4()
+
+  const fireDownloadProgressEvent = (args = {}) => store.dispatch('files/progress', {
+    type: 'download',
+    transferId,
+    ...args
+  })
+
+  // First progress event
+  fireDownloadProgressEvent({
+    id
+  })
+
   // Fetch parent file itself
   const meta = {}
   const files = await drive()
@@ -22,6 +40,11 @@ export const download = async (id) => {
     .then(response => response.result)
     .then((parent) => {
       meta.parent = parent
+      fireDownloadProgressEvent({
+        name: parent.name,
+        parts_total: Number.parseInt(parent.properties.parts),
+        dontIncrement: true
+      })
       return recursiveList(parent.id)
     })
 
@@ -29,35 +52,37 @@ export const download = async (id) => {
   if (Number.parseInt(meta.parent.properties.parts) !== files.length) {
     // store.dispatch()
     console.error(`[uds] ${meta.parent.properties.parts} !== ${files.length}`)
+    fireDownloadProgressEvent({
+      isFailure: true
+    })
     return
   }
 
-  store.dispatch('files/downloadProgress', { name: meta.parent.name, id, total: Number.parseInt(meta.parent.properties.parts) })
+  const parts_total = Number.parseInt(meta.parent.properties.parts)
 
-  const buffer = new ArrayBuffer(meta.parent.properties.parts * 750 * 1024)
+  const buffer = new ArrayBuffer(parts_total * 750 * 1024) // malloc
   const uint8buffer = new Uint8Array(buffer)
 
-  console.log(uint8buffer)
   for (const file of files) {
-    downloadFile(file.id)
+    downloadFile(file.id) // Queue downloads
       .then((text) => {
         const textBuffer = Base64.decodeArrayBuffer(text)
         uint8buffer.set(new Uint8Array(textBuffer), file.properties.part * 750 * 1024)
-        store.dispatch('files/downloadProgress', { name: meta.parent.name, id })
+        fireDownloadProgressEvent()
       })
   }
 
-  while (!store.state.files.downloads[id].finished) {
-    await sleep(100)
+  while (!store.state.files.downloads[transferId].finished) {
+    await sleep(100) // Replace this with store fired event
   }
-
-  store.dispatch('files/downloadProgress', { name: meta.parent.name, id })
 
   createAndDownloadBlobFile(uint8buffer, meta.parent.name)
 }
 
-export const downloadBatch = () => {
-
+export const downloadBatch = (ids) => {
+  for (let id of ids) {
+    download(id)
+  }
 }
 
 export default {

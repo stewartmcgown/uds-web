@@ -67,17 +67,9 @@ export const upload = ({
   api.upload(filereader)
 }
 
-export const uploadProgress = ({
+export const progress = ({
   commit
-}, {
-  id,
-  name,
-  uploaded,
-  total,
-  finished
-}) => {
-  commit(types.UPLOAD_PROGRESS, { id, name, uploaded, total, finished })
-}
+}, payload) => commit(types.PROGRESS, payload)
 
 export const downloadProgress = ({
   commit
@@ -88,7 +80,13 @@ export const downloadProgress = ({
   total,
   finished = false
 }) => {
-  commit(types.DOWNLOAD_PROGRESS, { id, name, downloaded, total, finished })
+  commit(types.DOWNLOAD_PROGRESS, {
+    id,
+    name,
+    downloaded,
+    total,
+    finished
+  })
 }
 
 export const incrementConnections = ({
@@ -106,8 +104,8 @@ export default {
   download,
   downloadBatch,
   upload,
-  uploadProgress,
   downloadProgress,
   incrementConnections,
-  decrementConnections
+  decrementConnections,
+  progress
 };

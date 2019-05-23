@@ -12,9 +12,9 @@ export const drive = () => new Promise(resolve => new Vue().$getGapiClient().the
 
 
 export const byteFormat = (size) => {
-    if (!size) return 0
-    const i = Math.floor( Math.log(size) / Math.log(1024) );
-    return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+  if (!size) return 0
+  const i = Math.floor(Math.log(size) / Math.log(1024));
+  return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 };
 
 export function createAndDownloadBlobFile(body, fileName) {
@@ -46,13 +46,16 @@ export const downloadFile = async (fileId) => {
 
   const d = await drive()
   return d.files.export({
-    fileId,
-    mimeType: 'text/plain'
-  }).then((res) => {
-    store.dispatch('files/decrementConnections')
-    return res.body
-  })
-    .catch(err => downloadFile(fileId))
+      fileId,
+      mimeType: 'text/plain'
+    }).then((res) => {
+      store.dispatch('files/decrementConnections')
+      return res.body
+    })
+    .catch(err => {
+      store.dispatch('files/decrementConnections')
+      return downloadFile(fileId)
+    })
 }
 
 export const recursiveList = (id, pageToken) => drive()
@@ -72,7 +75,11 @@ export const recursiveList = (id, pageToken) => drive()
   })
   .catch(err => [])
 
-export const createFolder = ({ name, parent, properties }) => drive().then(d => d.files.create({
+export const createFolder = ({
+  name,
+  parent,
+  properties
+}) => drive().then(d => d.files.create({
   resource: {
     name,
     mimeType: 'application/vnd.google-apps.folder',
@@ -81,11 +88,28 @@ export const createFolder = ({ name, parent, properties }) => drive().then(d => 
   }
 }))
 
-export const uploadFile = ({ name, parent, properties, body, mimeType }) => {
+export const uploadFile = async ({
+  name,
+  parent,
+  properties,
+  body,
+  mimeType
+}) => {
+  while (store.state.files.connections > 5) {
+    await sleep(500)
+  }
+
+  store.dispatch('files/incrementConnections')
+
   const path = '/upload/drive/v3/files',
     method = 'POST'
 
-  const metadata = { mimeType: 'application/vnd.google-apps.document', name, parents: [parent], properties }
+  const metadata = {
+    mimeType: 'application/vnd.google-apps.document',
+    name,
+    parents: [parent],
+    properties
+  }
 
   const content = arrayBufferToBase64(body.body)
 
@@ -95,15 +119,29 @@ export const uploadFile = ({ name, parent, properties, body, mimeType }) => {
     .finish()
 
   return new Vue().$getGapiClient()
-    .then(gapi => gapi.client.request({
-      path,
-      method,
-      params: {
-        uploadType: 'multipart',
-      },
-      headers: { 'Content-Type': multipart.type },
-      body: multipart.body
-    }))
+    .then(gapi => {
+      store.dispatch('files/decrementConnections')
+      return gapi.client.request({
+        path,
+        method,
+        params: {
+          uploadType: 'multipart',
+        },
+        headers: {
+          'Content-Type': multipart.type
+        },
+        body: multipart.body
+      })
+    }).catch(err => {
+      store.dispatch('files/decrementConnections')
+      return uploadFile({
+        name,
+        parent,
+        properties,
+        body,
+        mimeType
+      })
+    })
 }
 
 /*
