@@ -3,7 +3,7 @@
     <v-btn @click="upload">
       <v-icon>cloud_upload</v-icon>&nbsp;File
     </v-btn>
-    <v-btn @click="download">
+    <v-btn @click="$emit('download')">
       <v-icon>cloud_download</v-icon>&nbsp;Download
     </v-btn>
     <v-btn @click="$emit('delete')">
@@ -21,9 +21,6 @@ export default {
       f.type = 'file';
       f.click();
       f.onchange = () => this.$store.dispatch('files/upload', { filereader: f });
-    },
-    download() {
-      this.$store.dispatch('files/downloadBatch', { ids: this.$store.state.files.selected.map(s => s.id) })
     }
   }
 };

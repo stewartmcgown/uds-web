@@ -1,6 +1,6 @@
 <template>
   <div :class="className">
-    <v-progress-circular :value="progress"/> {{ progress_text }}
+    <v-progress-circular :value="progress"/> {{ snackbar_text }}
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
     type: String,
     uploaded: Number,
     total: Number,
-    progress_text: String
+    snackbar_text: String
   },
   computed: {
     progress() {

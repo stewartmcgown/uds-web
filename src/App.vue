@@ -26,16 +26,18 @@
     </v-content>
 
     <progress-snackbar />
+    <notification />
   </v-app>
 </template>
 
 <script>
 import progressSnackbar from '@/components/ProgressSnackbar'
+import notification from '@/components/Notification'
 
 export default {
   name: 'App',
   components: {
-    progressSnackbar
+    notification
   },
   data() {
     return {
@@ -53,6 +55,7 @@ export default {
 <style scoped>
 main {
   margin-top: 16px;
+  height: 100%;
 }
 
 a {

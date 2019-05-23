@@ -1,6 +1,6 @@
 <template>
   <div class="filebrowser">
-    <file-toolbar @delete="_delete"/>
+    <file-toolbar @delete="_delete" @download="downloadBatch"/>
     <v-data-table
       v-model="selected"
       :headers="headers"
@@ -107,6 +107,9 @@ export default {
     },
     download(id) {
       this.$store.dispatch('files/download', { id });
+    },
+    downloadBatch() {
+      this.$store.dispatch('files/downloadBatch', { ids: this.selected.map(s => s.id) });
     },
     _delete() {
       this.$store.dispatch('files/deleteBatch', { ids: this.selected.map(s => s.id) })

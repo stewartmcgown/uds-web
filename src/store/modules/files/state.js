@@ -7,7 +7,7 @@
 
 export default {
   files: [],
-  progress: {
+  snackbar: {
     visible: false,
     text: '',
     timeout: 60000

@@ -2,7 +2,8 @@ import {
   drive,
   createFolder,
   uploadFile,
-  sleep
+  sleep,
+  byteFormat
 } from './utils'
 
 import store from '../store'
@@ -76,12 +77,15 @@ export const upload = async (file) => {
 
   const properties = {
     uds: true,
-    size: fileSize,
+    size: byteFormat(fileSize),
+    size_numeric: fileSize,
     encoded_size: fileSize * (4 / 3),
     parts,
     mimeType: file.type,
     finished: false
   }
+
+    store.dispatch('files/uploadProgress', {id: parent, name: file.name})
 
   createFolder({ name: file.name, parent: '12V_eXUKlDZhZ1BVRWWPerwBzTDl5fmTX', properties }).then((response) => {
     console.log(response)

@@ -2,6 +2,7 @@
   <v-snackbar
     v-model="snackbar.visible"
     :timeout="snackbar.timeout"
+    :multi-line="snackbar.multiline === true"
     bottom
     left
     >
@@ -22,11 +23,11 @@ import { mapMutations } from 'vuex'
 export default {
   computed: {
     snackbar() {
-      return this.$store.state.files.snackbar
+      return this.$store.state.notification
     }
   },
   methods: {
-    ...mapMutations(['closeSnackbar'])
+    ...mapMutations(['closeNotification'])
   }
 }
 </script>

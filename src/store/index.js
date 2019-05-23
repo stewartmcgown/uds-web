@@ -39,7 +39,7 @@ export default new Vuex.Store({
   plugins: debug ? [createLogger()] : [],
 
   state: {
-    snackbar: {
+    notification: {
       visible: false,
       text: null,
       timeout: 6000,
@@ -47,26 +47,32 @@ export default new Vuex.Store({
     }
   },
 
+  actions: {
+    notification({ commit }, payload) {
+      commit('showNotification', payload)
+    }
+  },
+
   mutations: {
-    showSnackbar(state, payload) {
-      state.snackbar.text = payload.text
-      state.snackbar.multiline = (payload.text.length > 50)
-
+    showNotification(state, payload) {
+      state.notification.text = payload.text
+      state.notification.multiline = (payload.text.length > 50) ? true : false
+      
       if (payload.multiline) {
-        state.snackbar.multiline = payload.multiline
+        state.notification.multiline = payload.multiline
       }
-
+      
       if (payload.timeout) {
-        state.snackbar.timeout = payload.timeout
+        state.notification.timeout = payload.timeout
       }
 
-      state.snackbar.visible = true
+      state.notification.visible = true
     },
-    closeSnackbar(state) {
-      state.snackbar.visible = false
-      state.snackbar.multiline = false
-      state.snackbar.timeout = 6000
-      state.snackbar.text = null
+    closeNotification(state) {
+      state.notification.visible = false
+      state.notification.multiline = false
+      state.notification.timeout = 6000
+      state.notification.text = null
     },
   }
 

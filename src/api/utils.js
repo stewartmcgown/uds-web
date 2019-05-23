@@ -10,6 +10,13 @@ export const gapi = () => new Vue().$getGapiClient()
 // eslint-disable-next-line max-len
 export const drive = () => new Promise(resolve => new Vue().$getGapiClient().then(gapi => resolve(gapi.client.drive)))
 
+
+export const byteFormat = (size) => {
+    if (!size) return 0
+    const i = Math.floor( Math.log(size) / Math.log(1024) );
+    return ( size / Math.pow(1024, i) ).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+};
+
 export function createAndDownloadBlobFile(body, fileName) {
   const blob = new Blob([body]);
   if (navigator.msSaveBlob) {
@@ -169,5 +176,6 @@ export default {
   arrayBufferToBase64,
   recursiveList,
   downloadFile,
-  createAndDownloadBlobFile
+  createAndDownloadBlobFile,
+  byteFormat
 }
