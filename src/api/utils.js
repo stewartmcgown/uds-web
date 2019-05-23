@@ -77,8 +77,8 @@ export const recursiveList = (id, pageToken) => drive()
 
 export const createFolder = ({
   name,
-  parent,
-  properties
+  parent = 'root',
+  properties = {}
 }) => drive().then(d => d.files.create({
   resource: {
     name,
@@ -87,6 +87,34 @@ export const createFolder = ({
     properties
   }
 }))
+
+// async hide this folder
+export const hide = (fileId) => drive().then(d => d.files.update({
+  fileId,
+  removeParents: ['root']
+  
+}))
+
+export const createUDSRoot = async () => {
+  const r = await createFolder({name: 'UDS Root', properties: { 'udsRoot' : true }})
+  store.dispatch('files/setRoot', r.result.id)
+  hide(r.result.id).then(r => r)
+  return r.result.id
+}
+
+export const getUDSRoot = async () => {
+  let f = await drive()
+    .then(d => d.files.list({
+      q:`properties has {key='udsRoot' and value='true'} and trashed=false`
+    }))
+    .then(r => r.result.files[0])
+  if (!f) {
+    return await createUDSRoot()
+  } else {
+    store.dispatch('files/setRoot', f.id)
+    return f.id
+  }
+}
 
 export const uploadFile = async ({
   name,
@@ -215,5 +243,7 @@ export default {
   recursiveList,
   downloadFile,
   createAndDownloadBlobFile,
-  byteFormat
+  byteFormat,
+  createUDSRoot,
+  getUDSRoot
 }

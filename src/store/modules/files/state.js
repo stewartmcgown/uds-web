@@ -14,5 +14,7 @@ export default {
   },
   uploads: {},
   downloads: {},
-  connections: 0
+  connections: 0,
+  root: '',
+  storage: 0
 };

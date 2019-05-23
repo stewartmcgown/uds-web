@@ -3,11 +3,13 @@ import {
   createFolder,
   uploadFile,
   sleep,
-  byteFormat
+  byteFormat,
+  getUDSRoot
 } from './utils'
 
 import store from '../store'
 import uuid from 'uuid'
+import { create } from 'domain';
 
 /**
  * Handles the upload of a single file. This is a self contained
@@ -113,9 +115,15 @@ export const upload = async (fileInput) => {
     finished: false
   }
 
+  let root = store.state.files.root
+
+  if (!root) {
+    root = await getUDSRoot()
+  }
+
   createFolder({
     name: file.name,
-    parent: '12V_eXUKlDZhZ1BVRWWPerwBzTDl5fmTX',
+    parent: root,
     properties
   }).then((response) => {
     console.log(response)

@@ -11,13 +11,15 @@
       <v-btn flat to="/transfers">
         <span class="mr-2">Transfers</span>
       </v-btn>
-      <v-btn flat href="https://github.com/stewartmcgown/uds-web" target="_blank">
-        <span class="mr-2">Latest Release</span>
+      <v-btn flat to="/account">
+        <span class="mr-2">Account</span>
       </v-btn>
     </v-toolbar>
 
     <v-content>
-      <router-view/>
+      <v-container grid-list-md>
+        <router-view/>
+      </v-container>
     </v-content>
 
     <notification/>
@@ -41,6 +43,9 @@ export default {
     title() {
       return document.title;
     }
+  },
+  mounted() {
+    this.$store.dispatch("files/getRoot")
   }
 };
 </script>

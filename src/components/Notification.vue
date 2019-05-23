@@ -6,8 +6,9 @@
     bottom
     left
   >
+    <v-progress-circular color="info" :indeterminate="true" v-if="snackbar.indeterminate"></v-progress-circular>
     {{ snackbar.text }}
-    <v-btn flat dark @click="closeNotification">
+    <v-btn flat dark @click="closeNotification" v-if="snackbar.close">
       <v-icon>close</v-icon>
     </v-btn>
   </v-snackbar>

@@ -1,39 +1,26 @@
 <template>
-  <v-layout>
-    <v-card contextual-style="dark">
-      <span slot="header">My Account</span>
-      <div slot="body">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{{ $store.state.account.firstName }}</td>
-              <td>{{ $store.state.account.lastName }}</td>
-              <td>{{ $store.state.account.email }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div slot="footer">Made with love by Vivid Web</div>
-    </v-card>
-  </v-layout>
+  <v-card>
+    <v-card-title>Your Account</v-card-title>
+    <v-card-text>
+      <v-layout row wrap>
+        <v-flex md4>
+          <h4>Storage Saved</h4>
+          <v-progress-circular :indeterminate="true" v-if="!saved" />
+          <span v-if="saved">{{ saved }}</span>
+        </v-flex>
+        <v-flex md4>
+          <h4>View files in drive</h4>
+          <v-btn :href="filesLink" target="_blank" color="info" :disabled="root === ''">Open</v-btn>
+        </v-flex>
+      </v-layout>
+      
+    </v-card-text>
+    <div slot="footer">Contribute to this on GitHub.</div>
+  </v-card>
 </template>
 
 <script>
-/* ============
- * Account Index Page
- * ============
- *
- * Page where the user can view the account information.
- */
-
-import VLayout from "@/layouts/Default.vue";
+import { byteFormat } from '@/api/utils'
 
 export default {
   /**
@@ -44,8 +31,24 @@ export default {
   /**
    * The components that the page can use.
    */
-  components: {
-    VLayout
+  components: {},
+  data() {
+    return {};
+  },
+
+  computed: {
+    root() {
+      return this.$store.state.files.root;
+    },
+    filesLink() {
+      return `https://drive.google.com/drive/folders/${this.root}`;
+    },
+    saved() {
+      return byteFormat(this.$store.state.files.storage)
+    }
+  },
+  mounted() {
+    this.$store.dispatch("files/getStorage")
   }
 };
 </script>

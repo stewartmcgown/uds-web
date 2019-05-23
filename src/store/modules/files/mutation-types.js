@@ -12,6 +12,8 @@ export const CONNECTIONS = 'CONNECTIONS'
 export const SHOW_SNACKBAR = 'SHOW_SNACKBAR'
 export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR'
 export const PROGRESS = 'PROGRESS'
+export const SET_ROOT = 'SET_ROOT'
+export const SET_STORAGE = 'SET_STORAGE'
 
 export default {
   FILES,
@@ -20,5 +22,7 @@ export default {
   CONNECTIONS,
   SHOW_SNACKBAR,
   CLOSE_SNACKBAR,
-  PROGRESS
+  PROGRESS,
+  SET_ROOT,
+  SET_STORAGE
 };

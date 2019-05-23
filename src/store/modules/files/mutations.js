@@ -17,7 +17,9 @@ import {
   CONNECTIONS,
   SHOW_SNACKBAR,
   CLOSE_SNACKBAR,
-  PROGRESS
+  PROGRESS,
+  SET_ROOT,
+  SET_STORAGE
 } from './mutation-types';
 
 /* eslint-disable no-param-reassign */
@@ -83,7 +85,7 @@ export default {
       transfer.indeterminate = false
     }
 
-    const prefix = type.charAt(0).toUpperCase() + type.slice(1)
+    const prefix = type.charAt(0).toUpperCase() + type.slice(1) + "ed"
 
     if (transfer.parts_completed >= transfer.parts_total) {
       // Handle finished 
@@ -190,4 +192,10 @@ export default {
     state.snackbar.timeout = 6000
     state.snackbar.text = null
   },
+  [SET_ROOT](state, id) {
+    state.root = id
+  },
+  [SET_STORAGE](state, bytes) {
+    state.storage = bytes
+  }
 };

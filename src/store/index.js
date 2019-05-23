@@ -44,6 +44,8 @@ export default new Vuex.Store({
       text: null,
       timeout: 6000,
       multiline: false,
+      indeterminate: false,
+      close: true
     },
     notificationQueue: []
   },
@@ -72,6 +74,9 @@ export default new Vuex.Store({
       if (payload.timeout) {
         state.notification.timeout = payload.timeout
       }
+
+      state.notification.indeterminate = payload.indeterminate === true ? true : false
+      state.notification.close = payload.close === false ? false : true
 
       state.notification.visible = true
     },

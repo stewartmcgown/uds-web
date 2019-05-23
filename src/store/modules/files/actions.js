@@ -12,10 +12,17 @@ import Vue from 'vue';
 import * as types from './mutation-types';
 
 export const list = ({
-  commit
+  commit,
+  dispatch
 }, {
   q
 }) => {
+  dispatch('notification', {
+    text: 'Loading your files',
+    indeterminate: true,
+    timeout: 2000
+  }, {root: true})
+
   let query = "properties has {key='uds' and value='true'} and trashed=false" // and properties has {key='finished' and value='true'}
   if (!!q && q instanceof String) query += `and ${q}`
 
@@ -27,6 +34,9 @@ export const list = ({
     }))
     .then((response) => {
       commit(types.FILES, response.result.files)
+      dispatch('notification', {
+        close: true
+      })
     })
     .catch((error) => {
       console.log(error)
@@ -97,6 +107,25 @@ export const decrementConnections = ({
   commit
 }) => commit(types.CONNECTIONS, -1)
 
+export const setRoot = ({
+  commit
+}, id) => commit(types.SET_ROOT, id)
+
+export const getRoot = ({
+  commit
+}, id) => api.utils.getUDSRoot()
+
+export const getStorage = ({
+  commit,
+  state
+}) => {
+  api.utils.getUDSRoot()
+    .then(id => api.utils.recursiveList(id))
+    .then(files => {
+      const bytes = files.reduce((r, f) => r += Number.parseInt(f.properties.size_numeric), 0)
+      commit(types.SET_STORAGE, bytes)
+  })
+}
 
 export default {
   list,
@@ -107,5 +136,8 @@ export default {
   downloadProgress,
   incrementConnections,
   decrementConnections,
-  progress
+  progress,
+  setRoot,
+  getRoot,
+  getStorage
 };
