@@ -6,4 +6,8 @@
  * files module.
  */
 
-export default {};
+export const transfers = (state) => Object.keys(state.uploads).length + Object.keys(state.downloads).length
+
+export default {
+    transfers
+};

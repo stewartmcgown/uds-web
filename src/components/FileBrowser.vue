@@ -1,5 +1,6 @@
 <template>
   <div class="filebrowser">
+    <searchbar v-on:search="search"/>
     <file-toolbar @delete="_delete" @download="downloadBatch"/>
     <v-data-table
       v-model="selected"
@@ -56,11 +57,13 @@
 
 <script>
 import FileToolbar from '@/components/FileToolbar.vue';
+import Searchbar from '@/components/Searchbar.vue'
 
 export default {
   name: 'FileBrowser',
   components: {
-    FileToolbar
+    FileToolbar,
+    Searchbar
   },
   data: () => ({
     pagination: {
@@ -113,6 +116,9 @@ export default {
     },
     _delete() {
       this.$store.dispatch('files/deleteBatch', { ids: this.selected.map(s => s.id) })
+    },
+    search(event) {
+      this.$store.dispatch('files/list', { q: event });
     }
   }
 };

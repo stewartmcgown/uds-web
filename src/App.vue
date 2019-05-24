@@ -9,8 +9,15 @@
       </router-link>
       <v-spacer/>
       <v-btn flat to="/transfers">
-        <span class="mr-2">Transfers</span>
+        <v-badge right v-if="transfers">
+          <template v-slot:badge>
+            <span>{{ transfers }}</span>
+          </template>
+        </v-badge>
+        <span>Transfers</span>
+
       </v-btn>
+
       <v-btn flat to="/account">
         <span class="mr-2">Account</span>
       </v-btn>
@@ -42,10 +49,16 @@ export default {
   computed: {
     title() {
       return document.title;
+    },
+    transfers() {
+      return (
+        Object.keys(this.$store.state.files.uploads).length +
+        Object.keys(this.$store.state.files.downloads).length
+      );
     }
   },
   mounted() {
-    this.$store.dispatch("files/getRoot")
+    this.$store.dispatch("files/getRoot");
   }
 };
 </script>

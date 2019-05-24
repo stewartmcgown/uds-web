@@ -15,7 +15,7 @@ export const list = ({
   commit,
   dispatch
 }, {
-  q
+  q = ''
 }) => {
   dispatch('notification', {
     text: 'Loading your files',
@@ -24,7 +24,7 @@ export const list = ({
   }, {root: true})
 
   let query = "properties has {key='uds' and value='true'} and trashed=false" // and properties has {key='finished' and value='true'}
-  if (!!q && q instanceof String) query += `and ${q}`
+  if (q != '') query += ` and fullText contains '${q}'`
 
   new Vue().$getGapiClient()
     .then(gapi => gapi.client.drive.files.list({
