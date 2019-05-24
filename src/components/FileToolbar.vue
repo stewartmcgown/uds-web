@@ -1,12 +1,12 @@
 <template>
   <div class="file-toolbar">
-    <v-btn @click="upload">
+    <v-btn @click="upload" color="info">
       <v-icon>cloud_upload</v-icon>&nbsp;File
     </v-btn>
-    <v-btn @click="$emit('download')">
+    <v-btn @click="$emit('download')" color="info">
       <v-icon>cloud_download</v-icon>&nbsp;Download
     </v-btn>
-    <v-btn @click="$emit('delete')">
+    <v-btn @click="$emit('delete')" color="error">
       <v-icon>delete</v-icon>&nbsp;Delete
     </v-btn>
   </div>

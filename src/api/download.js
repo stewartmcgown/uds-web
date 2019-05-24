@@ -53,7 +53,8 @@ export const download = async (id) => {
     // store.dispatch()
     console.error(`[uds] ${meta.parent.properties.parts} !== ${files.length}`)
     fireDownloadProgressEvent({
-      isFailure: true
+      isFailure: true,
+      finished: true
     })
     return
   }

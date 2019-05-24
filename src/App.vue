@@ -59,6 +59,8 @@ export default {
   },
   mounted() {
     this.$store.dispatch("files/getRoot");
+
+    window.addEventListener("dragenter", () => 0)
   }
 };
 </script>
