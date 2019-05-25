@@ -20,7 +20,6 @@ export const list = ({
   dispatch('notification', {
     text: 'Loading your files',
     indeterminate: true,
-    timeout: 2000
   }, {root: true})
 
   let query = "properties has {key='uds' and value='true'} and trashed=false" // and properties has {key='finished' and value='true'}
@@ -30,13 +29,11 @@ export const list = ({
     .then(gapi => gapi.client.drive.files.list({
       q: query,
       pageSize: 20,
-      fields: 'nextPageToken, files(id, name, properties, mimeType)'
+      fields: 'nextPageToken, files(id, name, properties, mimeType, createdTime)'
     }))
     .then((response) => {
       commit(types.FILES, response.result.files)
-      dispatch('notification', {
-        close: true
-      })
+      commit('closeNotification', {}, { root: true })
     })
     .catch((error) => {
       console.log(error)
@@ -127,6 +124,12 @@ export const getStorage = ({
   })
 }
 
+export const setFinished = ({
+  commit
+}, id) => api.utils.setFinished(id)
+
+export const chunkEvent = ({ commit }, increment) => commit(types.CHUNK_COUNT, increment)
+
 export default {
   list,
   deleteBatch,
@@ -139,5 +142,7 @@ export default {
   progress,
   setRoot,
   getRoot,
-  getStorage
+  getStorage,
+  setFinished,
+  chunkEvent
 };

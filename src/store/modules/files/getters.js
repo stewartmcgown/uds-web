@@ -6,7 +6,12 @@
  * files module.
  */
 
-export const transfers = (state) => Object.keys(state.uploads).length + Object.keys(state.downloads).length
+export const transfers = (state) => {
+    let count = 0
+    Object.values(state.uploads).forEach(n => !n.finished ? count++ : 0)
+    Object.values(state.downloads).forEach(n => !n.finished ? count++ : 0)
+    return count
+} 
 
 export default {
     transfers

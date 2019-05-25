@@ -56,6 +56,10 @@ export const download = async (id) => {
       isFailure: true,
       finished: true
     })
+    store.dispatch('notification', {
+      icon: 'error',
+      text: `This file is incomplete.`
+    }, { root: true })
     return
   }
 
@@ -81,6 +85,9 @@ export const download = async (id) => {
 }
 
 export const downloadBatch = (ids) => {
+  store.dispatch("notification", {
+    text: `Downloading ${ids.length} files...`
+  })
   for (let id of ids) {
     download(id)
   }

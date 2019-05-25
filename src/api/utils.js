@@ -10,6 +10,14 @@ export const gapi = () => new Vue().$getGapiClient()
 // eslint-disable-next-line max-len
 export const drive = () => new Promise(resolve => new Vue().$getGapiClient().then(gapi => resolve(gapi.client.drive)))
 
+export const setFinished = (fileId) => drive().then(d => d.files.update({
+  fileId,
+  resource: {
+    properties: {
+      finished: true
+    }
+  }
+}))
 
 export const byteFormat = (size) => {
   if (!size) return 0
@@ -141,6 +149,8 @@ export const uploadFile = async ({
 
   const content = arrayBufferToBase64(body.body)
 
+  delete body.body
+
   const multipart = new MultiPartBuilder()
     .append('application/json', JSON.stringify(metadata))
     .append('text/plain', content)
@@ -245,5 +255,6 @@ export default {
   createAndDownloadBlobFile,
   byteFormat,
   createUDSRoot,
-  getUDSRoot
+  getUDSRoot,
+  setFinished
 }

@@ -16,5 +16,6 @@ export default {
   downloads: {},
   connections: 0,
   root: '',
-  storage: 0
+  storage: 0,
+  chunk_count: 0
 };

@@ -49,6 +49,7 @@
           <td>{{ props.item.name }}</td>
           <td class="text-xs-right">{{ props.item.properties.size }}</td>
           <td class="text-xs-right">{{ props.item.properties.mimeType }}</td>
+          <td class="text-xs-right">{{ createdTime(props.item.createdTime) }}</td>
         </tr>
       </template>
     </v-data-table>
@@ -84,13 +85,18 @@ export default {
       {
         text: 'MimeType',
         value: 'mimeType'
+      },
+      {
+        text: 'Created',
+        value: 'createdTime'
       }
     ]
   }),
   computed: {
     files() {
       return this.$store.state.files.files;
-    }
+    },
+    
   },
   mounted() {
     this.$store.dispatch('files/list', { q: '' });
@@ -119,6 +125,9 @@ export default {
     },
     search(event) {
       this.$store.dispatch('files/list', { q: event });
+    },
+    createdTime(dt) {
+      return new Date(dt).toLocaleString()
     }
   }
 };

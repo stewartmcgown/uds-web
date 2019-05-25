@@ -8,14 +8,13 @@
         </v-toolbar-title>
       </router-link>
       <v-spacer/>
+      <v-badge right v-if="transfers">
+        <template v-slot:badge>
+          <span>{{ transfers }}</span>
+        </template>
+      </v-badge>
       <v-btn flat to="/transfers">
-        <v-badge right v-if="transfers">
-          <template v-slot:badge>
-            <span>{{ transfers }}</span>
-          </template>
-        </v-badge>
         <span>Transfers</span>
-
       </v-btn>
 
       <v-btn flat to="/account">
@@ -26,6 +25,8 @@
     <v-content>
       <v-container grid-list-md>
         <router-view/>
+
+        
       </v-container>
     </v-content>
 
@@ -51,23 +52,23 @@ export default {
       return document.title;
     },
     transfers() {
-      return (
-        Object.keys(this.$store.state.files.uploads).length +
-        Object.keys(this.$store.state.files.downloads).length
-      );
+      return this.$store.getters["files/transfers"];
     }
   },
   mounted() {
     this.$store.dispatch("files/getRoot");
 
-    window.addEventListener("dragenter", () => 0)
+    /**
+     * TODO:
+     *  Implement this
+     */
+    window.addEventListener("dragenter", () => 0);
   }
 };
 </script>
 
 <style scoped>
 main {
-  margin-top: 16px;
   height: 100%;
 }
 

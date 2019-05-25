@@ -45,7 +45,8 @@ export default new Vuex.Store({
       timeout: 6000,
       multiline: false,
       indeterminate: false,
-      close: true
+      close: true,
+      icon: ''
     },
     notificationQueue: []
   },
@@ -55,7 +56,11 @@ export default new Vuex.Store({
       commit
     }, payload) {
       //commit('pushNotificaton', payload)
-      commit('showNotification', payload)
+      if (!payload) {
+        commit('closeNotification')
+      } else {
+        commit('showNotification', payload)
+      }
     }
   },
 
@@ -77,6 +82,7 @@ export default new Vuex.Store({
 
       state.notification.indeterminate = payload.indeterminate === true ? true : false
       state.notification.close = payload.close === false ? false : true
+      state.notification.icon = payload.icon || ''
 
       state.notification.visible = true
     },

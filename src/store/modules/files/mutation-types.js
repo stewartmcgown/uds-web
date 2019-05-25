@@ -14,6 +14,7 @@ export const CLOSE_SNACKBAR = 'CLOSE_SNACKBAR'
 export const PROGRESS = 'PROGRESS'
 export const SET_ROOT = 'SET_ROOT'
 export const SET_STORAGE = 'SET_STORAGE'
+export const CHUNK_COUNT = 'CHUNK_COUNT'
 
 export default {
   FILES,
@@ -24,5 +25,6 @@ export default {
   CLOSE_SNACKBAR,
   PROGRESS,
   SET_ROOT,
-  SET_STORAGE
+  SET_STORAGE,
+  CHUNK_COUNT
 };

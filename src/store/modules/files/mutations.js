@@ -12,14 +12,13 @@ import {
 } from 'fs';
 import {
   FILES,
-  UPLOAD_PROGRESS,
-  DOWNLOAD_PROGRESS,
   CONNECTIONS,
   SHOW_SNACKBAR,
   CLOSE_SNACKBAR,
   PROGRESS,
   SET_ROOT,
-  SET_STORAGE
+  SET_STORAGE,
+  CHUNK_COUNT
 } from './mutation-types';
 
 /* eslint-disable no-param-reassign */
@@ -57,7 +56,6 @@ export default {
     const _state = state[i]
     const transfer = _state[transferId]
 
-
     // Handle new transfer
     if (!transfer) {
       Vue.set(state[i], transferId, {
@@ -71,6 +69,8 @@ export default {
       return
     }
 
+    if (transfer.finished) return
+
     if (!transfer.id && id) transfer.id = id
 
     if (!transfer.parts_total && parts_total) transfer.parts_total = parts_total
@@ -83,6 +83,10 @@ export default {
     if (!isFailure && !dontIncrement) {
       transfer.parts_completed += 1
       transfer.indeterminate = false
+    } else if (isFailure) {
+      transfer.finished = true
+      transfer.isFailure = true
+      return
     }
 
     const prefix = type.charAt(0).toUpperCase() + type.slice(1) + "ed"
@@ -91,83 +95,13 @@ export default {
       // Handle finished 
       transfer.finished = true
       transfer.message = `${prefix} complete.`
+      Vue.store.dispatch('files/setFinished', transfer.id)
     } else {
       // Just update with progress
       transfer.message = message || `${prefix} ${transfer.parts_completed} of ${transfer.parts_total} parts...`
     }
 
 
-  },
-  [UPLOAD_PROGRESS](state, {
-    name,
-    id,
-    uploaded,
-    total,
-    finished,
-    isReading = true,
-    message,
-    transferId
-  }) {
-    const upload = state.uploads[transferId]
-    if (upload && (finished || upload.uploaded === total)) {
-      Vue.delete(state.uploads, transferId)
-    } else if (upload && !finished && total) {
-      if (uploaded != 0) upload.uploaded += 1
-      upload.snackbar_text = message || `${name}: Uploaded ${upload.uploaded} of ${total} parts...`
-      upload.indeterminate = false
-      upload.total = total
-    } else {
-      Vue.set(state.uploads, transferId, {
-        name,
-        id,
-        uploaded: 0,
-        total,
-        indeterminate: true
-      })
-
-      const text = `${name}: Starting upload...`
-
-      state.uploads[transferId].snackbar_text = text
-
-      state.snackbar.visible = true
-      state.snackbar.text = text
-    }
-  },
-  [DOWNLOAD_PROGRESS](state, {
-    name,
-    id,
-    downloaded,
-    total,
-    part,
-    finished,
-    transferId
-  }) {
-    const download = state.downloads[id]
-    if (download) console.log(`${download.downloaded} ${download.total}`)
-    if (download && (finished || download.downloaded === download.total)) {
-      Vue.delete(state.downloads, id)
-    } else if (download && !finished) {
-      download.downloaded += 1
-      download.snackbar_text = `${name}: Downloaded ${download.downloaded} of ${download.total} parts...`
-
-      if (download.downloaded >= download.total) {
-        download.finished = true
-      }
-    } else {
-      Vue.set(state.downloads, id, {
-        name,
-        id,
-        downloaded: 0,
-        total,
-        part
-      })
-      const text = `${name}: Starting download...`
-
-      state.downloads[id].snackbar_text = text
-
-      state.snackbar.visible = true
-      state.snackbar.text = text
-    }
   },
   [CONNECTIONS](state, inc) {
     state.connections += inc
@@ -197,5 +131,12 @@ export default {
   },
   [SET_STORAGE](state, bytes) {
     state.storage = bytes
+  },
+  [CHUNK_COUNT](state, increment) {
+    if (increment) {
+      state.chunk_count += 1
+    } else if (!increment && state.chunk_count > 0) {
+      state.chunk_count -= 1
+    }
   }
 };
