@@ -10,7 +10,7 @@
     "e2e": "vue-cli-service e2e"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "font-awesome": "^4.7.0",
     "register-service-worker": "^1.6.2",
     "uuid": "^3.3.2",
